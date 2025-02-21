@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation Tools</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .template-card {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .template-preview {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            max-height: 100px;
+            overflow: hidden;
+        }
+
+        .layout-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .layout-option {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .layout-option:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .layout-option.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .toolbar button {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toolbar button:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .cheat-sheet {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .cheat-sheet h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .cheat-sheet code {
+            background: #e9ecef;
+            padding: 0.2em 0.4em;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Slide Templates</h2>
+        <div class="template-grid" id="templateGrid">
+            <!-- Templates will be inserted here -->
+        </div>
+
+        <h2>Layout Options</h2>
+        <div class="layout-options">
+            <div class="layout-option" onclick="applyLayout('default')">Default</div>
+            <div class="layout-option" onclick="applyLayout('split')">Split</div>
+            <div class="layout-option" onclick="applyLayout('grid')">Grid</div>
+            <div class="layout-option" onclick="applyLayout('comparison')">Comparison</div>
+        </div>
+
+        <h2>Quick Tools</h2>
+        <div class="toolbar">
+            <button onclick="insertImage()">Insert Image</button>
+            <button onclick="insertTable()">Insert Table</button>
+            <button onclick="insertCode()">Insert Code Block</button>
+            <button onclick="insertMathEquation()">Insert Math</button>
+            <button onclick="toggleBackground()">Toggle Background</button>
+        </div>
+
+        <div class="cheat-sheet">
+            <h3>MARP Cheat Sheet</h3>
+            <p><code>---</code> New slide</p>
+            <p><code>![bg](image.jpg)</code> Full background image</p>
+            <p><code>![bg left:40%](image.jpg)</code> Left background</p>
+            <p><code>$E = mc^2$</code> Inline math</p>
+            <p><code><!-- _class: lead --></code> Emphasis slide</p>
+        </div>
+    </div>
+
+    <script src="js/marpStyles.js"></script>
+    <script>
+        const marpStyler = new MarpStyler();
+        
+        // Load templates
+        function loadTemplates() {
+            const templates = marpStyler.generateSlideTemplates();
+            const grid = document.getElementById('templateGrid');
+            
+            Object.entries(templates).forEach(([name, content]) => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+                card.innerHTML = `
+                    <h3>${name.charAt(0).toUpperCase() + name.slice(1)}</h3>
+                    <div class="template-preview">${content.slice(0, 100)}...</div>
+                `;
+                card.onclick = () => insertTemplate(content);
+                grid.appendChild(card);
+            });
+        }
+
+        // Insert template into main editor
+        function insertTemplate(content) {
+            window.parent.postMessage({
+                type: 'insertTemplate',
+                content: content
+            }, '*');
+        }
+
+        // Apply layout
+        function applyLayout(layout) {
+            window.parent.postMessage({
+                type: 'applyLayout',
+                layout: layout
+            }, '*');
+        }
+
+        // Quick tools
+        function insertImage() {
+            const url = prompt('Enter image URL:', '');
+            if (url) {
+                insertTemplate(`![](${url})`);
+            }
+        }
+
+        function insertTable() {
+            insertTemplate(marpStyler.generateSlideTemplates().table);
+        }
+
+        function insertCode() {
+            const language = prompt('Enter programming language:', 'javascript');
+            if (language) {
+                insertTemplate("```" + language + "\n\n```");
+            }
+        }
+
+        function insertMathEquation() {
+            insertTemplate('$$\n\n$$');
+        }
+
+        function toggleBackground() {
+            const url = prompt('Enter background image URL:', '');
+            if (url) {
+                insertTemplate(`![bg](${url})`);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadTemplates);
+    </script>
+</body>
+</html>

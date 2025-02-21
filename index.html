@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Publisher</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/publisher.js" defer></script>
+</head>
+<body>
+    <div class="publisher-container">
+        <h1 class="text-center">Content Publisher</h1>
+
+        <div class="config-panel">
+            <div class="form-group">
+                <label for="apiBase">API Endpoint</label>
+                <input type="text" id="apiBase" class="form-control" 
+                       placeholder="Enter API endpoint (e.g., http://localhost:3001/api)">
+            </div>
+            <div class="form-group">
+                <label for="deployHook">Vercel Deploy Hook URL</label>
+                <input type="password" id="deployHook" class="form-control" 
+                       placeholder="Enter your Vercel deploy hook URL">
+            </div>
+            <button onclick="settings.saveSettings()" class="btn">Save Settings</button>
+            <div id="settingsStatus" class="status-message"></div>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab active" data-type="blog">Blog Post</div>
+                <div class="tab" data-type="presentation">Presentation</div>
+            </div>
+
+            <form id="publishForm" class="publish-form">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" class="form-control" rows="2" required></textarea>
+                </div>
+
+                <div id="editorContainer">
+                    <textarea id="markdownContent" class="form-control" 
+                              placeholder="Write your content in Markdown..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" class="form-control">
+                        <option value="tech">Tech</option>
+                        <option value="development">Development</option>
+                        <option value="career">Career</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated)</label>
+                    <input type="text" id="tags" class="form-control" 
+                           placeholder="tech, development, web">
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-publish">Publish</button>
+                    <button type="button" id="saveDraft" class="btn">Save Draft</button>
+                    <button type="button" onclick="publisher.clearForm()" class="btn">Clear</button>
+                </div>
+            </form>
+
+            <div id="publishStatus" class="publish-status"></div>
+            
+            <div class="content-list">
+                <h2>Saved Content</h2>
+                <div id="contentList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the editor when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.editor = new Editor();
+        });
+    </script>
+</body>
+</html>

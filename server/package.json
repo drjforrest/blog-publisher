@@ -1,0 +1,22 @@
+{
+  "name": "blog-publisher-server",
+  "version": "1.0.0",
+  "description": "Server for blog publisher",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "front-matter": "^4.0.2",
+    "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
