@@ -1,0 +1,35 @@
+{
+  "name": "blog-publisher",
+  "version": "1.0.0",
+  "description": "Publisher interface for the simple blog",
+  "main": "index.html",
+  "scripts": {
+    "dev": "http-server . -p 3001",
+    "start": "http-server . -p 3001",
+    "lint": "eslint js/*.js",
+    "format": "prettier --write \"js/**/*.js\" \"css/**/*.css\""
+  },
+  "keywords": [
+    "blog",
+    "publisher",
+    "markdown",
+    "editor"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.35.0",
+    "http-server": "^14.1.1",
+    "prettier": "^2.8.4"
+  },
+  "dependencies": {
+    "marked": "^4.2.4",
+    "highlight.js": "^11.7.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
